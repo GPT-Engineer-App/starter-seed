@@ -10,6 +10,7 @@ const Index = () => {
   const [tool, setTool] = useState("pencil");
   const [elements, setElements] = useState([]);
   const [selectedElement, setSelectedElement] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const startDrawing = (e) => {
     const { offsetX, offsetY } = e.nativeEvent;
@@ -73,6 +74,7 @@ const Index = () => {
     newElements[index].x = Math.max(0, Math.min(d.x, canvasRef.current.width - newElements[index].width));
     newElements[index].y = Math.max(0, Math.min(d.y, canvasRef.current.height - newElements[index].height));
     setElements(newElements);
+    setIsDragging(false);
   };
 
   const handleElementResize = (index, e, direction, ref, delta, position) => {
@@ -98,6 +100,21 @@ const Index = () => {
     setSelectedElement(null);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Delete" && selectedElement !== null) {
+      const newElements = elements.filter((_, i) => i !== selectedElement);
+      setElements(newElements);
+      setSelectedElement(null);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedElement, elements]);
+
   return (
     <div className="flex flex-col items-center space-y-4">
       <h1 className="text-3xl">Canvas Board</h1>
@@ -122,6 +139,7 @@ const Index = () => {
             key={index}
             size={{ width: element.width, height: element.height }}
             position={{ x: element.x, y: element.y }}
+            onDragStart={() => setIsDragging(true)}
             onDragStop={(e, d) => handleElementDragStop(index, e, d)}
             onResize={(e, direction, ref, delta, position) =>
               handleElementResize(index, e, direction, ref, delta, position)
@@ -132,7 +150,7 @@ const Index = () => {
               position: "absolute",
               top: 0,
               left: 0,
-              border: selectedElement === index ? "2px dashed blue" : "none",
+              border: selectedElement === index && isDragging ? "2px dashed blue" : "none",
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -141,6 +159,44 @@ const Index = () => {
           >
             {element.type === "image" && (
               <img src={element.src} alt="uploaded" style={{ width: "100%", height: "100%" }} />
+            )}
+            {selectedElement === index && (
+              <>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: -10,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "red",
+                    cursor: "pointer",
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    // Implement rotation logic here
+                  }}
+                />
+                {["top-left", "top-right", "bottom-left", "bottom-right"].map((corner) => (
+                  <div
+                    key={corner}
+                    style={{
+                      position: "absolute",
+                      [corner.split("-")[0]]: -5,
+                      [corner.split("-")[1]]: -5,
+                      width: 10,
+                      height: 10,
+                      backgroundColor: "blue",
+                      cursor: `${corner.split("-")[0]}-${corner.split("-")[1]}-resize`,
+                    }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      // Implement resize logic here
+                    }}
+                  />
+                ))}
+              </>
             )}
           </Rnd>
         ))}
