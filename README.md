@@ -1,38 +1,38 @@
-# starter-seed
+# Bare Bones App
 
-Create a bare-bones application that I can modify and build on.
+This is a minimal web application setup.
 
-## Collaborate with GPT Engineer
+## How to Run the Application
 
-This is a [gptengineer.app](https://gptengineer.app)-synced repository 🌟🤖
+1. Clone the repository:
+    ```sh
+    git clone <repository-url>
+    ```
 
-Changes made via gptengineer.app will be committed to this repo.
+2. Navigate to the project directory:
+    ```sh
+    cd <project-directory>
+    ```
 
-If you clone this repo and push changes, you will have them reflected in the GPT Engineer UI.
+3. Open the `index.html` file in your web browser.
 
-## Tech stack
+## How to Modify the Application
 
-This project is built with React with shadcn-ui and Tailwind CSS.
+### HTML
 
-- Vite
-- React
-- shadcn-ui
-- Tailwind CSS
+- The HTML file is located at `public/index.html`.
+- You can modify the content within the `<body>` tag to change what is displayed on the page.
 
-## Setup
+### CSS
 
-```sh
-git clone https://github.com/GPT-Engineer-App/starter-seed.git
-cd starter-seed
-npm i
-```
+- The CSS file is located at `public/styles.css`.
+- You can add or modify styles to change the appearance of the application.
 
-```sh
-npm run dev
-```
+### JavaScript
 
-This will run a dev server with auto reloading and an instant preview.
+- The JavaScript file is located at `public/script.js`.
+- You can add or modify JavaScript functions to change the behavior of the application.
 
-## Requirements
+## License
 
-- Node.js & npm - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+This project is licensed under the MIT License.
