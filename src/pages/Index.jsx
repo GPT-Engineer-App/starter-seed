@@ -132,7 +132,7 @@ const Index = () => {
               position: "absolute",
               top: 0,
               left: 0,
-              border: selectedElement === index ? "2px solid blue" : "none",
+              border: selectedElement === index ? "2px dashed blue" : "none",
             }}
             onClick={(e) => {
               e.stopPropagation();
