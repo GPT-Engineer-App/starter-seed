@@ -70,17 +70,17 @@ const Index = () => {
 
   const handleElementDragStop = (index, e, d) => {
     const newElements = [...elements];
-    newElements[index].x = d.x;
-    newElements[index].y = d.y;
+    newElements[index].x = Math.max(0, Math.min(d.x, canvasRef.current.width - newElements[index].width));
+    newElements[index].y = Math.max(0, Math.min(d.y, canvasRef.current.height - newElements[index].height));
     setElements(newElements);
   };
 
   const handleElementResize = (index, e, direction, ref, delta, position) => {
     const newElements = [...elements];
-    newElements[index].width = ref.offsetWidth;
-    newElements[index].height = ref.offsetHeight;
-    newElements[index].x = position.x;
-    newElements[index].y = position.y;
+    newElements[index].width = Math.min(ref.offsetWidth, canvasRef.current.width - position.x);
+    newElements[index].height = Math.min(ref.offsetHeight, canvasRef.current.height - position.y);
+    newElements[index].x = Math.max(0, Math.min(position.x, canvasRef.current.width - newElements[index].width));
+    newElements[index].y = Math.max(0, Math.min(position.y, canvasRef.current.height - newElements[index].height));
     setElements(newElements);
   };
 
@@ -88,6 +88,14 @@ const Index = () => {
     const newElements = [...elements];
     newElements[index].rotation = rotation;
     setElements(newElements);
+  };
+
+  const handleElementClick = (index) => {
+    setSelectedElement(index);
+  };
+
+  const handleCanvasClick = () => {
+    setSelectedElement(null);
   };
 
   return (
@@ -98,7 +106,7 @@ const Index = () => {
         <Button onClick={() => setTool("eraser")}>Eraser</Button>
         <Input type="file" onChange={handleImageUpload} />
       </div>
-      <div className="relative">
+      <div className="relative" onClick={handleCanvasClick}>
         <canvas
           ref={canvasRef}
           width={800}
@@ -124,6 +132,11 @@ const Index = () => {
               position: "absolute",
               top: 0,
               left: 0,
+              border: selectedElement === index ? "2px solid blue" : "none",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleElementClick(index);
             }}
           >
             {element.type === "image" && (
